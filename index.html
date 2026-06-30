@@ -8,6 +8,7 @@
       content="GoodJob is a focused technical job dashboard for New York, Long Island, hybrid, and remote roles."
     />
     <meta name="theme-color" content="#087f86" />
+    <meta name="app-version" content="1.0.0" />
     <meta property="og:title" content="GoodJob | Technical job dashboard" />
     <meta
       property="og:description"
@@ -21,9 +22,24 @@
     />
     <title>GoodJob | Find better technical jobs faster</title>
     <link rel="stylesheet" href="styles.css?v=20260630-1" />
-    <script src="script.js?v=20260630-1" defer></script>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-RSVR6Y389R"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RSVR6Y389R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function gtag() {
+        window.dataLayer.push(arguments);
+      };
+      try {
+        window.DEBUG_ANALYTICS =
+          window.DEBUG_ANALYTICS === true || window.localStorage.getItem("DEBUG_ANALYTICS") === "true";
+      } catch {
+        window.DEBUG_ANALYTICS = false;
+      }
+      window.gtag("js", new Date());
+      window.gtag("config", "G-RSVR6Y389R", { debug_mode: window.DEBUG_ANALYTICS === true });
+    </script>
+    <script src="analytics.js?v=20260630-2" defer></script>
+    <script src="script.js?v=20260630-2" defer></script>
   </head>
   <body>
     <a class="skip-link" href="#results">Skip to job results</a>

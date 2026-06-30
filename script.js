@@ -209,6 +209,21 @@
 
   if (typeof document === "undefined") return;
 
+  const trackEvent = window.GoodJobAnalytics?.trackEvent || (() => false);
+  const SEARCH_DEBOUNCE_MS = 500;
+  const FILTER_DEBOUNCE_MS = 500;
+  const FILTER_TYPES = {
+    location: "location",
+    workMode: "work_mode",
+    employmentType: "employment_type",
+    seniority: "seniority",
+    category: "category",
+    salaryMin: "minimum_salary",
+    maxAge: "job_age",
+    source: "source",
+    tags: "tag",
+  };
+
   const state = {
     jobs: [],
     filteredJobs: [],
@@ -222,6 +237,7 @@
   };
 
   const elements = {};
+  const analyticsTimers = new Map();
 
   function cacheElements() {
     [
@@ -500,7 +516,14 @@
                 aria-expanded="${expanded}"
               >${icon("chevron")}</button>
             </div>
-            <a class="apply-button" href="${escapeHtml(job.applyUrl)}" target="_blank" rel="noopener noreferrer">
+            <a
+              class="apply-button"
+              href="${escapeHtml(job.applyUrl)}"
+              target="_blank"
+              rel="noopener noreferrer"
+              data-action="apply"
+              data-job-id="${escapeHtml(job.id)}"
+            >
               Apply ${icon("external")}
             </a>
           </div>
@@ -563,13 +586,69 @@
     renderJobs();
   }
 
+  function scheduleAnalytics(key, callback, delay) {
+    window.clearTimeout(analyticsTimers.get(key));
+    analyticsTimers.set(
+      key,
+      window.setTimeout(() => {
+        analyticsTimers.delete(key);
+        callback();
+      }, delay),
+    );
+  }
+
+  function clearAnalyticsTimers() {
+    analyticsTimers.forEach((timer) => window.clearTimeout(timer));
+    analyticsTimers.clear();
+  }
+
+  function trackSearch() {
+    trackEvent("job_search", {
+      search_length: state.filters.keyword.length,
+      results_count: state.filteredJobs.length,
+    });
+  }
+
+  function scheduleSearchTracking() {
+    scheduleAnalytics("job_search", trackSearch, SEARCH_DEBOUNCE_MS);
+  }
+
+  function safeFilterValue(group, value) {
+    if (group === "location") return state.filters.location ? "set" : "cleared";
+    if (group === "salaryMin") return Number(value) || 0;
+    if (group === "maxAge") return value === "" ? "any" : Number(value);
+    return value || "cleared";
+  }
+
+  function trackFilterChange(group, value) {
+    const filterType = FILTER_TYPES[group];
+    if (!filterType) return;
+    trackEvent("filter_applied", {
+      filter_type: filterType,
+      filter_value: safeFilterValue(group, value),
+      active_filter_count: activeFilterCount(state.filters),
+      results_count: state.filteredJobs.length,
+    });
+  }
+
+  function scheduleFilterTracking(group, value) {
+    scheduleAnalytics(`filter_${group}`, () => trackFilterChange(group, value), FILTER_DEBOUNCE_MS);
+  }
+
   function clearFilters() {
+    const previousFilterCount = activeFilterCount(state.filters);
+    clearAnalyticsTimers();
     state.filters = structuredClone(EMPTY_FILTERS);
     syncControls();
     applyAndRender();
+    trackEvent("filters_cleared", {
+      previous_filter_count: previousFilterCount,
+      results_count: state.filteredJobs.length,
+    });
   }
 
   function removeFilter(group, value) {
+    const previousValue = Array.isArray(state.filters[group]) ? value : state.filters[group];
     if (Array.isArray(state.filters[group])) {
       state.filters[group] = state.filters[group].filter((item) => item !== value);
     } else {
@@ -577,6 +656,11 @@
     }
     syncControls();
     applyAndRender();
+    if (group === "keyword") {
+      scheduleSearchTracking();
+    } else {
+      trackFilterChange(group, previousValue);
+    }
   }
 
   function showToast(message) {
@@ -621,26 +705,51 @@
     elements["filter-toggle"].setAttribute("aria-expanded", "false");
   }
 
+  function findJob(jobId) {
+    return state.jobs.find((job) => job.id === jobId);
+  }
+
+  function jobEventParams(job, includeSalary = false) {
+    const params = {
+      job_id: job.id,
+      company: job.company,
+      source: job.source,
+      work_mode: job.workMode,
+      job_age_days: getJobAge(job.postedDate, state.now),
+    };
+    if (includeSalary && Number.isFinite(job.salaryMin)) params.salary_min = job.salaryMin;
+    if (includeSalary && Number.isFinite(job.salaryMax)) params.salary_max = job.salaryMax;
+    return params;
+  }
+
   function bindEvents() {
     elements["keyword-search"].addEventListener("input", (event) => {
       state.filters.keyword = event.target.value.trim();
       applyAndRender();
+      scheduleSearchTracking();
     });
     elements["location-search"].addEventListener("input", (event) => {
       state.filters.location = event.target.value.trim();
       applyAndRender();
+      scheduleFilterTracking("location", state.filters.location);
     });
     elements["salary-minimum"].addEventListener("input", (event) => {
       state.filters.salaryMin = Math.max(0, Number(event.target.value) || 0);
       applyAndRender();
+      scheduleFilterTracking("salaryMin", state.filters.salaryMin);
     });
     elements["age-select"].addEventListener("change", (event) => {
       state.filters.maxAge = event.target.value;
       applyAndRender();
+      trackFilterChange("maxAge", state.filters.maxAge);
     });
     elements["sort-select"].addEventListener("change", (event) => {
       state.sort = event.target.value;
       applyAndRender();
+      trackEvent("sort_changed", {
+        sort_value: state.sort,
+        results_count: state.filteredJobs.length,
+      });
     });
 
     elements["filter-panel"].addEventListener("change", (event) => {
@@ -651,6 +760,7 @@
       input.checked ? values.add(input.value) : values.delete(input.value);
       state.filters[group] = [...values];
       applyAndRender();
+      trackFilterChange(group, input.value);
     });
 
     elements["active-filters"].addEventListener("click", (event) => {
@@ -663,15 +773,27 @@
       const button = event.target.closest("[data-action]");
       if (!button) return;
       const jobId = button.dataset.jobId;
+      const job = findJob(jobId);
+      if (!job) return;
       if (button.dataset.action === "save") {
         state.saved = toggleSaved(state.saved, jobId);
         applyAndRender();
+        trackEvent("job_saved", {
+          job_id: job.id,
+          company: job.company,
+          source: job.source,
+          saved_state: state.saved.has(jobId),
+          saved_jobs_count: state.saved.size,
+        });
       }
       if (button.dataset.action === "copy") copyJobLink(jobId);
       if (button.dataset.action === "expand") {
-        state.expanded.has(jobId) ? state.expanded.delete(jobId) : state.expanded.add(jobId);
+        const opening = !state.expanded.has(jobId);
+        opening ? state.expanded.add(jobId) : state.expanded.delete(jobId);
         renderJobs();
+        if (opening) trackEvent("job_card_opened", jobEventParams(job, true));
       }
+      if (button.dataset.action === "apply") trackEvent("apply_click", jobEventParams(job));
     });
 
     ["clear-filters-top", "clear-filters-bottom", "empty-clear"].forEach((id) => {
@@ -689,9 +811,11 @@
 
   function openHashJob() {
     const jobId = window.location.hash.slice(1);
-    if (!jobId || !state.jobs.some((job) => job.id === jobId)) return;
+    const job = findJob(jobId);
+    if (!job || state.expanded.has(jobId)) return;
     state.expanded.add(jobId);
     renderJobs();
+    trackEvent("job_card_opened", jobEventParams(job, true));
     requestAnimationFrame(() => document.getElementById(jobId)?.scrollIntoView({ block: "center" }));
   }
 
@@ -758,6 +882,11 @@
       buildFilterOptions();
       syncControls();
       applyAndRender();
+      trackEvent("app_loaded", {
+        total_jobs: state.jobs.length,
+        data_updated: state.meta?.generatedAt || "unknown",
+        load_status: state.dataMode === "live" ? "success" : "fallback",
+      });
       openHashJob();
     } catch (error) {
       console.error("GoodJob data load failed:", error);
@@ -765,6 +894,11 @@
       elements["empty-state"].hidden = true;
       elements["error-state"].hidden = false;
       elements["results-summary"].textContent = "Live and fallback job data are unavailable.";
+      trackEvent("app_loaded", {
+        total_jobs: 0,
+        data_updated: "unknown",
+        load_status: "failed",
+      });
     }
   }
 

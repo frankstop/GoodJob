@@ -245,6 +245,35 @@ GoodJob stores these keys in the current browser:
 
 This state is not committed, uploaded, or shared between devices. Clearing site data removes it.
 
+## Analytics events
+
+GoodJob sends lightweight custom events through the existing GA4 tag. `analytics.js` owns the `trackEvent(eventName, params = {})` adapter. Calls safely stop when GA4 is blocked or unavailable. Every event includes `app_name: "GoodJob"` and the current `app_version`.
+
+| Event | Trigger | Parameters |
+| --- | --- | --- |
+| `app_loaded` | Live data, demo fallback, or failed load completes | `total_jobs`, `data_updated`, `load_status` |
+| `job_search` | Debounced keyword search change | `search_length`, `results_count` |
+| `filter_applied` | Location, work mode, employment type, seniority, category, minimum salary, job age, source, or tag changes | `filter_type`, `filter_value`, `active_filter_count`, `results_count` |
+| `filters_cleared` | Any clear-filters control is used | `previous_filter_count`, `results_count` |
+| `sort_changed` | Sort order changes | `sort_value`, `results_count` |
+| `job_card_opened` | A job card expands or a linked card is selected | `job_id`, `company`, `source`, `work_mode`, `job_age_days`, available salary bounds |
+| `job_saved` | A job is saved or unsaved | `job_id`, `company`, `source`, `saved_state`, `saved_jobs_count` |
+| `apply_click` | An outbound employer link is clicked | `job_id`, `company`, `source`, `work_mode`, `job_age_days` |
+
+Search text is never sent. Location input is reported only as `set` or `cleared`; typed location text is not sent. Notes, resumes, email addresses, and other personal input are outside the event contract. `apply_click` can be marked as a GA4 key event later.
+
+### Test analytics in GA4
+
+1. Run GoodJob through a local web server.
+2. In browser console, run `localStorage.setItem("DEBUG_ANALYTICS", "true")`, then reload.
+3. Use search, filters, sort, card, save, and apply controls.
+4. Confirm `[GoodJob analytics] sent` entries in browser console.
+5. Open GA4 Admin, then DebugView, and confirm event names and parameters.
+6. Open GA4 Reports, then Realtime, and confirm events arrive from the active page.
+7. Disable local debug mode with `localStorage.removeItem("DEBUG_ANALYTICS")`, then reload.
+
+Ad blockers may stop network delivery. App behavior should remain unchanged when delivery is blocked.
+
 ## Source and privacy policy
 
 GoodJob accepts employer-direct public ATS APIs only. It does not scrape Indeed, LinkedIn, Google Jobs, ZipRecruiter, Glassdoor, or another aggregator.
@@ -355,7 +384,9 @@ http://localhost:8000/GoodJob/
 ├── scripts/
 │   └── fetch-jobs.mjs
 ├── tests/
+│   ├── analytics.test.js
 │   └── goodjob.test.js
+├── analytics.js
 ├── index.html
 ├── jobs.json
 ├── script.js
