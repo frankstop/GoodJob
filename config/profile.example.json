@@ -1,0 +1,6 @@
+{
+  "description": "Optional local-only candidate criteria belong in a gitignored profile.local.json or a GitHub secret. The public GoodJob pipeline does not read or publish candidate profiles.",
+  "preferredLocations": ["New York, NY", "Long Island, NY", "Remote, US"],
+  "preferredCategories": ["Business Systems", "Technical Operations", "Data", "IT Support"],
+  "skills": ["SQL", "Python", "Systems", "POS", "BI"]
+}

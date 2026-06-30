@@ -21,8 +21,10 @@
   };
 
   function parseLocalDate(value) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value || ""))) return null;
     const [year, month, day] = String(value).split("-").map(Number);
-    return new Date(Date.UTC(year, month - 1, day));
+    const date = new Date(Date.UTC(year, month - 1, day));
+    return Number.isNaN(date.getTime()) ? null : date;
   }
 
   function startOfUtcDay(value) {
@@ -32,11 +34,13 @@
 
   function getJobAge(postedDate, now = new Date()) {
     const posted = parseLocalDate(postedDate);
+    if (!posted) return null;
     const today = startOfUtcDay(now);
     return Math.max(0, Math.floor((today - posted) / 86400000));
   }
 
   function getAgeStatus(age) {
+    if (age === null || age === undefined || !Number.isFinite(age)) return "unknown";
     if (age <= 3) return "new";
     if (age <= 7) return "fresh";
     if (age <= 21) return "aging";
@@ -44,6 +48,7 @@
   }
 
   function formatAge(age) {
+    if (age === null || age === undefined || !Number.isFinite(age)) return "Age unknown";
     if (age === 0) return "Posted today";
     if (age === 1) return "1 day old";
     if (age >= 30) return "30+ days old";
@@ -92,7 +97,8 @@
       if (!includesAny(state.source, job.source)) return false;
       if (!includesEvery(state.tags, job.tags || [])) return false;
       if (salaryFloor && Number(job.salaryMin || 0) < salaryFloor) return false;
-      if (maxAge !== null && getJobAge(job.postedDate, now) > maxAge) return false;
+      const age = getJobAge(job.postedDate, now);
+      if (maxAge !== null && (age === null || age > maxAge)) return false;
       return true;
     });
   }
@@ -101,11 +107,19 @@
     const sorted = [...jobs];
     const collator = new Intl.Collator("en", { sensitivity: "base" });
 
+    const compareNullable = (left, right, direction = 1) => {
+      const leftMissing = left === null || left === undefined || !Number.isFinite(left);
+      const rightMissing = right === null || right === undefined || !Number.isFinite(right);
+      if (leftMissing && rightMissing) return 0;
+      if (leftMissing) return 1;
+      if (rightMissing) return -1;
+      return (left - right) * direction;
+    };
     const sorters = {
-      newest: (a, b) => getJobAge(a.postedDate, now) - getJobAge(b.postedDate, now),
-      oldest: (a, b) => getJobAge(b.postedDate, now) - getJobAge(a.postedDate, now),
-      "salary-high": (a, b) => Number(b.salaryMax || 0) - Number(a.salaryMax || 0),
-      "salary-low": (a, b) => Number(a.salaryMin || 0) - Number(b.salaryMin || 0),
+      newest: (a, b) => compareNullable(getJobAge(a.postedDate, now), getJobAge(b.postedDate, now)),
+      oldest: (a, b) => compareNullable(getJobAge(a.postedDate, now), getJobAge(b.postedDate, now), -1),
+      "salary-high": (a, b) => compareNullable(a.salaryMax, b.salaryMax, -1),
+      "salary-low": (a, b) => compareNullable(a.salaryMin, b.salaryMin),
       company: (a, b) => collator.compare(a.company, b.company),
       title: (a, b) => collator.compare(a.title, b.title),
     };
@@ -114,9 +128,10 @@
   }
 
   function averageAge(jobs, now = new Date()) {
-    if (!jobs.length) return 0;
-    const sum = jobs.reduce((total, job) => total + getJobAge(job.postedDate, now), 0);
-    return Math.round(sum / jobs.length);
+    const knownAges = jobs.map((job) => getJobAge(job.postedDate, now)).filter((age) => age !== null);
+    if (!knownAges.length) return null;
+    const sum = knownAges.reduce((total, age) => total + age, 0);
+    return Math.round(sum / knownAges.length);
   }
 
   function escapeHtml(value) {
@@ -137,7 +152,9 @@
         currency: "USD",
         maximumFractionDigits: 0,
       }).format(amount);
-    return `${format(job.salaryMin)} – ${format(job.salaryMax)}`;
+    if (job.salaryMin && job.salaryMax) return `${format(job.salaryMin)} – ${format(job.salaryMax)}`;
+    if (job.salaryMin) return `From ${format(job.salaryMin)}`;
+    return `Up to ${format(job.salaryMax)}`;
   }
 
   function uniqueSorted(jobs, property) {
@@ -168,6 +185,12 @@
     );
   }
 
+  function toggleSaved(savedIds, jobId) {
+    const next = new Set(savedIds);
+    next.has(jobId) ? next.delete(jobId) : next.add(jobId);
+    return next;
+  }
+
   const exported = {
     EMPTY_FILTERS,
     getJobAge,
@@ -177,6 +200,7 @@
     sortJobs,
     averageAge,
     activeFilterCount,
+    toggleSaved,
   };
 
   if (typeof module !== "undefined" && module.exports) {
@@ -193,6 +217,8 @@
     saved: new Set(),
     expanded: new Set(),
     now: new Date(),
+    meta: null,
+    dataMode: "live",
   };
 
   const elements = {};
@@ -446,7 +472,7 @@
           </dl>
           <div class="job-actions">
             <div class="job-age">
-              <span class="age-pill age-${status}">${status[0].toUpperCase() + status.slice(1)}</span>
+              <span class="age-pill age-${status}">${status === "unknown" ? "Unknown" : status[0].toUpperCase() + status.slice(1)}</span>
               <small>${escapeHtml(formatAge(age))}</small>
             </div>
             <div class="action-row">
@@ -485,7 +511,7 @@
             <p>${escapeHtml(job.description)}</p>
           </div>
           <dl>
-            <div><dt>Posted</dt><dd>${escapeHtml(job.postedDate)}</dd></div>
+            <div><dt>Posted</dt><dd>${escapeHtml(job.postedDate || "Unknown")}</dd></div>
             <div><dt>Employment</dt><dd>${escapeHtml(job.employmentType)}</dd></div>
             <div><dt>Work mode</dt><dd>${escapeHtml(job.workMode)}</dd></div>
           </dl>
@@ -500,20 +526,26 @@
   }
 
   function renderStats() {
-    const newCount = state.jobs.filter((job) => getJobAge(job.postedDate, state.now) <= 3).length;
+    const newCount = state.jobs.filter((job) => {
+      const age = getJobAge(job.postedDate, state.now);
+      return age !== null && age <= 3;
+    }).length;
     const remoteCount = state.jobs.filter((job) => job.workMode === "Remote").length;
     const resultCount = state.filteredJobs.length;
     document.getElementById("total-stat").textContent = state.jobs.length;
     document.getElementById("new-stat").textContent = newCount;
     document.getElementById("remote-stat").textContent = remoteCount;
-    document.getElementById("age-stat").textContent = `${averageAge(state.filteredJobs, state.now)} days`;
+    const resultAverageAge = averageAge(state.filteredJobs, state.now);
+    document.getElementById("age-stat").textContent =
+      resultAverageAge === null ? "Unknown" : `${resultAverageAge} days`;
     document.getElementById("saved-stat").textContent = state.saved.size;
     document.getElementById("result-stat").textContent = resultCount;
     elements["result-heading-count"].textContent = resultCount;
+    const noun = state.dataMode === "fallback" ? "demo listings" : "live employer listings";
     elements["results-summary"].textContent =
       resultCount === state.jobs.length
-        ? "Showing every sample listing."
-        : `Showing ${resultCount} of ${state.jobs.length} sample listings.`;
+        ? `Showing all ${state.jobs.length} ${noun}.`
+        : `Showing ${resultCount} of ${state.jobs.length} ${noun}.`;
 
     const count = activeFilterCount(state.filters);
     [elements["mobile-filter-count"], elements["drawer-filter-count"]].forEach((badge) => {
@@ -632,7 +664,7 @@
       if (!button) return;
       const jobId = button.dataset.jobId;
       if (button.dataset.action === "save") {
-        state.saved.has(jobId) ? state.saved.delete(jobId) : state.saved.add(jobId);
+        state.saved = toggleSaved(state.saved, jobId);
         applyAndRender();
       }
       if (button.dataset.action === "copy") copyJobLink(jobId);
@@ -663,13 +695,65 @@
     requestAnimationFrame(() => document.getElementById(jobId)?.scrollIntoView({ block: "center" }));
   }
 
+  function renderDataTimestamp(meta, fallback = false) {
+    const header = document.getElementById("updated-label");
+    const footer = document.getElementById("data-timestamp");
+    if (fallback) {
+      header.textContent = "Demo fallback";
+      footer.textContent = "Live ATS data unavailable; showing the local demo dataset.";
+      return;
+    }
+    const generatedAt = new Date(meta?.generatedAt);
+    if (!meta || Number.isNaN(generatedAt.getTime())) {
+      header.textContent = "Update time unavailable";
+      footer.textContent = "Live employer data loaded; refresh time unavailable.";
+      return;
+    }
+    const formatted = new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      timeZoneName: "short",
+    }).format(generatedAt);
+    header.textContent = `Updated ${formatted}`;
+    footer.textContent = `Employer feeds refreshed ${formatted}.`;
+  }
+
+  async function fetchJobArray(path) {
+    const response = await fetch(path, { cache: "no-store" });
+    if (!response.ok) throw new Error(`${path} returned HTTP ${response.status}`);
+    const jobs = await response.json();
+    if (!Array.isArray(jobs) || !jobs.length) throw new Error(`${path} is empty`);
+    return jobs;
+  }
+
   async function loadJobs() {
     elements["error-state"].hidden = true;
+    elements["results-summary"].textContent = "Loading refreshed employer listings…";
     try {
-      const response = await fetch("./jobs.json", { cache: "no-store" });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const jobs = await response.json();
-      if (!Array.isArray(jobs) || !jobs.length) throw new Error("Job data is empty");
+      let jobs;
+      try {
+        jobs = await fetchJobArray("./public/data/jobs.json");
+        state.dataMode = "live";
+        try {
+          const metaResponse = await fetch("./public/data/meta.json", { cache: "no-store" });
+          if (!metaResponse.ok) throw new Error(`meta.json returned HTTP ${metaResponse.status}`);
+          state.meta = await metaResponse.json();
+          renderDataTimestamp(state.meta);
+        } catch (metaError) {
+          console.warn("GoodJob metadata load failed:", metaError);
+          state.meta = null;
+          renderDataTimestamp(null);
+        }
+      } catch (liveError) {
+        console.warn("GoodJob live data load failed; trying demo fallback:", liveError);
+        jobs = await fetchJobArray("./jobs.json");
+        state.dataMode = "fallback";
+        state.meta = null;
+        renderDataTimestamp(null, true);
+      }
       state.jobs = jobs;
       buildFilterOptions();
       syncControls();
@@ -680,7 +764,7 @@
       elements["job-list"].hidden = true;
       elements["empty-state"].hidden = true;
       elements["error-state"].hidden = false;
-      elements["results-summary"].textContent = "Job data is unavailable.";
+      elements["results-summary"].textContent = "Live and fallback job data are unavailable.";
     }
   }
 

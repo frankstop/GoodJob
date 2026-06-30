@@ -1,0 +1,110 @@
+[
+  {
+    "id": "stripe_greenhouse",
+    "name": "Stripe",
+    "adapter": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/stripe/jobs?content=true",
+    "enabled": true,
+    "tags": ["Software", "Data", "Infrastructure", "Business Systems"],
+    "homepage": "https://stripe.com/jobs"
+  },
+  {
+    "id": "datadog_greenhouse",
+    "name": "Datadog",
+    "adapter": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/datadog/jobs?content=true",
+    "enabled": true,
+    "tags": ["Software", "Data", "Infrastructure", "Technical Operations", "NYC"],
+    "homepage": "https://careers.datadoghq.com/"
+  },
+  {
+    "id": "mongodb_greenhouse",
+    "name": "MongoDB",
+    "adapter": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/mongodb/jobs?content=true",
+    "enabled": true,
+    "tags": ["Software", "Data", "Infrastructure", "NYC"],
+    "homepage": "https://www.mongodb.com/company/careers"
+  },
+  {
+    "id": "figma_greenhouse",
+    "name": "Figma",
+    "adapter": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/figma/jobs?content=true",
+    "enabled": true,
+    "tags": ["Software", "Data", "Product", "NYC"],
+    "homepage": "https://www.figma.com/careers/"
+  },
+  {
+    "id": "cloudflare_greenhouse",
+    "name": "Cloudflare",
+    "adapter": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/cloudflare/jobs?content=true",
+    "enabled": true,
+    "tags": ["Software", "Infrastructure", "Security", "Technical Operations"],
+    "homepage": "https://www.cloudflare.com/careers/"
+  },
+  {
+    "id": "databricks_greenhouse",
+    "name": "Databricks",
+    "adapter": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/databricks/jobs?content=true",
+    "enabled": true,
+    "tags": ["Software", "Data", "Infrastructure", "Analytics"],
+    "homepage": "https://www.databricks.com/company/careers"
+  },
+  {
+    "id": "braze_greenhouse",
+    "name": "Braze",
+    "adapter": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/braze/jobs?content=true",
+    "enabled": true,
+    "tags": ["Software", "Data", "Technical Operations", "Business Systems", "NYC"],
+    "homepage": "https://www.braze.com/company/careers"
+  },
+  {
+    "id": "toast_greenhouse",
+    "name": "Toast",
+    "adapter": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/toast/jobs?content=true",
+    "enabled": true,
+    "tags": ["Software", "Data", "Technical Operations", "Business Systems", "POS"],
+    "homepage": "https://careers.toasttab.com/"
+  },
+  {
+    "id": "digitalocean_greenhouse",
+    "name": "DigitalOcean",
+    "adapter": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/digitalocean98/jobs?content=true",
+    "enabled": true,
+    "tags": ["Software", "Infrastructure", "Technical Operations", "Remote"],
+    "homepage": "https://www.digitalocean.com/careers"
+  },
+  {
+    "id": "gitlab_greenhouse",
+    "name": "GitLab",
+    "adapter": "greenhouse",
+    "url": "https://boards-api.greenhouse.io/v1/boards/gitlab/jobs?content=true",
+    "enabled": true,
+    "tags": ["Software", "Infrastructure", "Security", "Technical Operations", "Remote"],
+    "homepage": "https://about.gitlab.com/jobs/"
+  },
+  {
+    "id": "spotify_lever",
+    "name": "Spotify",
+    "adapter": "lever",
+    "url": "https://api.lever.co/v0/postings/spotify?mode=json",
+    "enabled": true,
+    "tags": ["Software", "Data", "Infrastructure", "Product", "NYC"],
+    "homepage": "https://www.lifeatspotify.com/jobs"
+  },
+  {
+    "id": "redis_ashby",
+    "name": "Redis",
+    "adapter": "ashby",
+    "url": "https://api.ashbyhq.com/posting-api/job-board/redis",
+    "enabled": true,
+    "tags": ["Software", "Data", "Infrastructure", "Technical Operations", "Remote"],
+    "homepage": "https://redis.io/careers/"
+  }
+]

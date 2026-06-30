@@ -4,6 +4,7 @@
   "private": true,
   "description": "A static technical job dashboard for GitHub Pages.",
   "scripts": {
+    "fetch:jobs": "node scripts/fetch-jobs.mjs",
     "test": "node --test",
     "serve": "python3 -m http.server 8000"
   }

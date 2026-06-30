@@ -1,0 +1,212 @@
+[
+  {
+    "id": "stripe_greenhouse",
+    "name": "Stripe",
+    "adapter": "greenhouse",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Data",
+      "Infrastructure",
+      "Business Systems"
+    ],
+    "homepage": "https://stripe.com/jobs",
+    "ok": true,
+    "jobsFetched": 486,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "datadog_greenhouse",
+    "name": "Datadog",
+    "adapter": "greenhouse",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Data",
+      "Infrastructure",
+      "Technical Operations",
+      "NYC"
+    ],
+    "homepage": "https://careers.datadoghq.com/",
+    "ok": true,
+    "jobsFetched": 420,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "mongodb_greenhouse",
+    "name": "MongoDB",
+    "adapter": "greenhouse",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Data",
+      "Infrastructure",
+      "NYC"
+    ],
+    "homepage": "https://www.mongodb.com/company/careers",
+    "ok": true,
+    "jobsFetched": 409,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "figma_greenhouse",
+    "name": "Figma",
+    "adapter": "greenhouse",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Data",
+      "Product",
+      "NYC"
+    ],
+    "homepage": "https://www.figma.com/careers/",
+    "ok": true,
+    "jobsFetched": 169,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "cloudflare_greenhouse",
+    "name": "Cloudflare",
+    "adapter": "greenhouse",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Infrastructure",
+      "Security",
+      "Technical Operations"
+    ],
+    "homepage": "https://www.cloudflare.com/careers/",
+    "ok": true,
+    "jobsFetched": 221,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "databricks_greenhouse",
+    "name": "Databricks",
+    "adapter": "greenhouse",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Data",
+      "Infrastructure",
+      "Analytics"
+    ],
+    "homepage": "https://www.databricks.com/company/careers",
+    "ok": true,
+    "jobsFetched": 776,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "braze_greenhouse",
+    "name": "Braze",
+    "adapter": "greenhouse",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Data",
+      "Technical Operations",
+      "Business Systems",
+      "NYC"
+    ],
+    "homepage": "https://www.braze.com/company/careers",
+    "ok": true,
+    "jobsFetched": 233,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "toast_greenhouse",
+    "name": "Toast",
+    "adapter": "greenhouse",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Data",
+      "Technical Operations",
+      "Business Systems",
+      "POS"
+    ],
+    "homepage": "https://careers.toasttab.com/",
+    "ok": true,
+    "jobsFetched": 264,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "digitalocean_greenhouse",
+    "name": "DigitalOcean",
+    "adapter": "greenhouse",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Infrastructure",
+      "Technical Operations",
+      "Remote"
+    ],
+    "homepage": "https://www.digitalocean.com/careers",
+    "ok": true,
+    "jobsFetched": 144,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "gitlab_greenhouse",
+    "name": "GitLab",
+    "adapter": "greenhouse",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Infrastructure",
+      "Security",
+      "Technical Operations",
+      "Remote"
+    ],
+    "homepage": "https://about.gitlab.com/jobs/",
+    "ok": true,
+    "jobsFetched": 138,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "spotify_lever",
+    "name": "Spotify",
+    "adapter": "lever",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Data",
+      "Infrastructure",
+      "Product",
+      "NYC"
+    ],
+    "homepage": "https://www.lifeatspotify.com/jobs",
+    "ok": true,
+    "jobsFetched": 121,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  },
+  {
+    "id": "redis_ashby",
+    "name": "Redis",
+    "adapter": "ashby",
+    "enabled": true,
+    "tags": [
+      "Software",
+      "Data",
+      "Infrastructure",
+      "Technical Operations",
+      "Remote"
+    ],
+    "homepage": "https://redis.io/careers/",
+    "ok": true,
+    "jobsFetched": 65,
+    "lastFetchedAt": "2026-06-30T11:55:42.370Z",
+    "error": null
+  }
+]

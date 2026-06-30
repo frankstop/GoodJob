@@ -667,6 +667,10 @@ input::placeholder {
   background: var(--red);
 }
 
+.age-unknown {
+  background: #8a96a3;
+}
+
 .job-list {
   display: grid;
   gap: 12px;
@@ -906,6 +910,12 @@ input::placeholder {
   border-color: #e9aaaa;
   background: #fff0f0;
   color: #a83838;
+}
+
+.age-pill.age-unknown {
+  border-color: #c8d0d8;
+  background: #f3f5f7;
+  color: #5f6b78;
 }
 
 .action-row {

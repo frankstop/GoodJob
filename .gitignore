@@ -1,2 +1,5 @@
 .DS_Store
 node_modules/
+config/profile.local.json
+data/raw/*.json
+data/snapshots/*.json

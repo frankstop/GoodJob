@@ -20,8 +20,8 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23087f86'/%3E%3Cpath d='M18 32.5 27 41l19-20' fill='none' stroke='white' stroke-width='7' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
     />
     <title>GoodJob | Find better technical jobs faster</title>
-    <link rel="stylesheet" href="styles.css?v=20260629-2" />
-    <script src="script.js?v=20260629-2" defer></script>
+    <link rel="stylesheet" href="styles.css?v=20260630-1" />
+    <script src="script.js?v=20260630-1" defer></script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-RSVR6Y389R"></script>
   </head>
@@ -45,7 +45,7 @@
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v14H4V6a1 1 0 0 1 1-1Z" />
         </svg>
-        <span id="updated-label">Updated Jun 29</span>
+        <span id="updated-label">Loading refresh time…</span>
       </p>
     </header>
 
@@ -229,13 +229,14 @@
           <div class="results-heading">
             <div>
               <h1 id="results-heading"><span id="result-heading-count">0</span> matching jobs</h1>
-              <p id="results-summary" aria-live="polite">Loading the latest sample data…</p>
+              <p id="results-summary" aria-live="polite">Loading refreshed employer listings…</p>
             </div>
             <p class="age-key" aria-label="Job age status key">
               <span class="age-dot age-new"></span> New
               <span class="age-dot age-fresh"></span> Fresh
               <span class="age-dot age-aging"></span> Aging
               <span class="age-dot age-old"></span> Old
+              <span class="age-dot age-unknown"></span> Unknown
             </p>
           </div>
 
@@ -253,7 +254,7 @@
 
           <section id="error-state" class="empty-state" hidden>
             <h2>We couldn’t load the job data</h2>
-            <p>Refresh the page, or run GoodJob through a local web server instead of opening the HTML file directly.</p>
+            <p>The refreshed employer feed and local demo fallback are unavailable. Refresh the page, or use a local web server instead of opening the HTML file directly.</p>
             <button id="retry-load" class="button-primary" type="button">Try again</button>
           </section>
         </section>
@@ -261,8 +262,8 @@
     </main>
 
     <footer class="site-footer">
-      <p>GoodJob uses sample listings for demonstration. Confirm details on the employer’s site before applying.</p>
-      <p><span class="live-dot" aria-hidden="true"></span> Data updated June 29, 2026</p>
+      <p>GoodJob indexes public employer ATS feeds. Confirm role details on the linked employer posting before applying.</p>
+      <p><span class="live-dot" aria-hidden="true"></span> <span id="data-timestamp">Loading data timestamp…</span></p>
     </footer>
 
     <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
