@@ -12,8 +12,8 @@
     ],
     "homepage": "https://stripe.com/jobs",
     "ok": true,
-    "jobsFetched": 524,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "jobsFetched": 527,
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -31,7 +31,7 @@
     "homepage": "https://careers.datadoghq.com/",
     "ok": true,
     "jobsFetched": 418,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -47,8 +47,8 @@
     ],
     "homepage": "https://www.mongodb.com/company/careers",
     "ok": true,
-    "jobsFetched": 401,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "jobsFetched": 400,
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -64,8 +64,8 @@
     ],
     "homepage": "https://www.figma.com/careers/",
     "ok": true,
-    "jobsFetched": 173,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "jobsFetched": 172,
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -81,8 +81,8 @@
     ],
     "homepage": "https://www.cloudflare.com/careers/",
     "ok": true,
-    "jobsFetched": 269,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "jobsFetched": 270,
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -98,8 +98,8 @@
     ],
     "homepage": "https://www.databricks.com/company/careers",
     "ok": true,
-    "jobsFetched": 799,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "jobsFetched": 795,
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -116,8 +116,8 @@
     ],
     "homepage": "https://www.braze.com/company/careers",
     "ok": true,
-    "jobsFetched": 232,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "jobsFetched": 230,
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -134,8 +134,8 @@
     ],
     "homepage": "https://careers.toasttab.com/",
     "ok": true,
-    "jobsFetched": 307,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "jobsFetched": 305,
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -151,8 +151,8 @@
     ],
     "homepage": "https://www.digitalocean.com/careers",
     "ok": true,
-    "jobsFetched": 125,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "jobsFetched": 135,
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -169,8 +169,8 @@
     ],
     "homepage": "https://about.gitlab.com/jobs/",
     "ok": true,
-    "jobsFetched": 185,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "jobsFetched": 184,
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -187,8 +187,8 @@
     ],
     "homepage": "https://www.lifeatspotify.com/jobs",
     "ok": true,
-    "jobsFetched": 109,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "jobsFetched": 107,
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   },
   {
@@ -206,7 +206,7 @@
     "homepage": "https://redis.io/careers/",
     "ok": true,
     "jobsFetched": 28,
-    "lastFetchedAt": "2026-07-23T18:21:21.474Z",
+    "lastFetchedAt": "2026-07-24T00:08:05.611Z",
     "error": null
   }
 ]
